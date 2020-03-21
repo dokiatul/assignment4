@@ -1,0 +1,56 @@
+*{
+	margin:0;
+	padding:0;
+	border:0;
+	outline:0;
+	vertical-align:baseline;
+	background:transparent;
+}
+body,html{
+	height:100%;
+}
+body{
+	font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans, Geneva", Verdana, sans-serif;
+	font-size:11pt;
+}
+h1, h2, table {
+	margin: 30px 0 0 30px;
+}
+h2 {
+	border-bottom: 1px solid silver;
+}
+th, td {
+	width: 150px;
+	border: 1px solid silver;
+	padding: 6px;
+	text-align: left;
+}
+.bordered-table {
+	border-collapse: collapse;
+}
+select, input, button {
+	padding: 4px;
+	margin-top: 4px;
+	border: 1px solid silver;
+	line-height: 25px;
+	border-radius: 0;
+}
+select {
+	height: 35px;
+}
+input {
+	width: 150px;
+}
+select, button {
+	width: 160px;
+}
+.flex-container {
+	padding-left: 30px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.flex-container div {
+  flex: 0 33.33%;
+	line-height: 20px;
+  margin: 10px;
+}
