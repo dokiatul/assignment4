@@ -1,7 +1,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const express = require('express');
-const { ApolloServer, UserInputError } = require('apollo-server-express');
+const { ApolloServer } = require('apollo-server-express');
 const { MongoClient } = require('mongodb');
 
 const url = process.env.DB_URL || 'mongodb+srv://atuldoki:0wGuxlgRmOZOWYKU@fullstack-yyooy.mongodb.net/producttracker?retryWrites=true';
@@ -10,20 +10,7 @@ const port = process.env.API_SERVER_PORT || 3000;
 
 let db;
 
-let aboutMessage = "Product Tracker API v1.0";
-
 const app = express();
-
-const resolvers = {
-  Query: {
-    productList,
-  },
-  Mutation: {
-    productAdd,
-  },
-};
-
-const productsDB = [];
 
 async function getNextSequence(name) {
   const result = await db.collection('counters').findOneAndUpdate(
@@ -35,24 +22,30 @@ async function getNextSequence(name) {
 }
 
 async function productAdd(_, { product }) {
-  //product.id = productsDB.length + 1;
-  //productsDB.push(product);
-  console.log('ad product');
-  product.id = await getNextSequence('products');
-  console.log(product.id);
-  const result = await db.collection('products').insertOne(product);
+  console.log('add product');
+  const newProduct = Object.assign({}, product);
+  newProduct.id = await getNextSequence('products');
+  console.log(newProduct.id);
+  const result = await db.collection('products').insertOne(newProduct);
   const savedProduct = await db.collection('products')
     .findOne({ _id: result.insertedId });
   return savedProduct;
-  //return product;
 }
 
 async function productList() {
   const products = await db.collection('products').find({}).toArray();
-  console.log(products)
+  console.log(products);
   return products;
-  //return productsDB;
 }
+
+const resolvers = {
+  Query: {
+    productList,
+  },
+  Mutation: {
+    productAdd,
+  },
+};
 
 async function connectToDb() {
   const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -68,13 +61,13 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app, path: '/graphql' });
 
-(async function () {
+(async function start() {
   try {
     await connectToDb();
-    app.listen(port, function () {
+    app.listen(port, () => {
       console.log(`API started on port ${port}`);
     });
   } catch (err) {
     console.log('ERROR:', err);
   }
-})();
+}());
