@@ -1,43 +1,42 @@
 const { MongoClient } = require('mongodb');
-//const url = 'mongodb://localhost/issuetracker';
-// Atlas URL  - replace UUU with user, PPP with password, XXX with hostname
+
 const url = 'mongodb+srv://atuldoki:0wGuxlgRmOZOWYKU@fullstack-yyooy.mongodb.net/producttracker?retryWrites=true';
-// mLab URL - replace UUU with user, PPP with password, XXX with hostname
-// const url = 'mongodb://UUU:PPP@XXX.mlab.com:33533/issuetracker';
+
 function testWithCallbacks(callback) {
   console.log('\n--- testWithCallbacks ---');
   const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
-  client.connect(function(err, client) {
-    if (err) {
-      callback(err);
+  client.connect((connErr) => {
+    if (connErr) {
+      callback(connErr);
       return;
     }
     console.log('Connected to MongoDB');
     const db = client.db();
     const collection = db.collection('employees');
     const employee = { id: 1, name: 'A. Callback', age: 23 };
-    collection.insertOne(employee, function(err, result) {
-      if (err) {
+    collection.insertOne(employee, (insertErr, result) => {
+      if (insertErr) {
         client.close();
-        callback(err);
+        callback(insertErr);
         return;
       }
       console.log('Result of insert:\n', result.insertedId);
-      collection.find({ _id: result.insertedId})
-        .toArray(function(err, docs) {
-        if (err) {
+      collection.find({ _id: result.insertedId })
+        .toArray((err, docs) => {
+          if (err) {
+            client.close();
+            callback(err);
+            return;
+          }
+          console.log('Result of find:\n', docs);
           client.close();
           callback(err);
-          return;
-        }
-        console.log('Result of find:\n', docs);
-        client.close();
-        callback(err);
-      });
+        });
     });
   });
 }
-testWithCallbacks(function(err) {
+
+testWithCallbacks((err) => {
   if (err) {
     console.log(err);
   }

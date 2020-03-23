@@ -1,27 +1,30 @@
-var contentNode = document.getElementById('inventory');
+/* eslint "react/react-in-jsx-scope": "off" */
 
-class ProductTable extends React.Component {
-  render() {
-    const productRows = this.props.products.map(product => /*#__PURE__*/React.createElement(ProductRow, {
-      key: product.id,
-      product: product
-    }));
-    return /*#__PURE__*/React.createElement("table", {
-      className: "bordered-table"
-    }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Product Name"), /*#__PURE__*/React.createElement("th", null, "Price"), /*#__PURE__*/React.createElement("th", null, "Category"), /*#__PURE__*/React.createElement("th", null, "Image"))), /*#__PURE__*/React.createElement("tbody", null, productRows));
-  }
+/* globals React ReactDOM */
 
+/* eslint "react/jsx-no-undef": "off" */
+
+/* eslint "no-alert": "off" */
+function ProductRow({
+  product
+}) {
+  return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, product.name), /*#__PURE__*/React.createElement("td", null, product.price), /*#__PURE__*/React.createElement("td", null, product.category), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("a", {
+    href: product.image,
+    target: "_blank",
+    rel: "noopener noreferrer"
+  }, "Veiw")));
 }
 
-class ProductRow extends React.Component {
-  render() {
-    const product = this.props.product;
-    return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, product.name), /*#__PURE__*/React.createElement("td", null, "$", product.price), /*#__PURE__*/React.createElement("td", null, product.category), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("a", {
-      href: product.image,
-      target: "_blank"
-    }, "Veiw")));
-  }
-
+function ProductTable({
+  products
+}) {
+  const productRows = products.map(product => /*#__PURE__*/React.createElement(ProductRow, {
+    key: product.id,
+    product: product
+  }));
+  return /*#__PURE__*/React.createElement("table", {
+    className: "bordered-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Product Name"), /*#__PURE__*/React.createElement("th", null, "Price"), /*#__PURE__*/React.createElement("th", null, "Category"), /*#__PURE__*/React.createElement("th", null, "Image"))), /*#__PURE__*/React.createElement("tbody", null, productRows));
 }
 
 class ProductAdd extends React.Component {
@@ -32,18 +35,22 @@ class ProductAdd extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    var form = document.forms.productAdd;
-    var price = form.price.value.replace('$', '');
-    this.props.createProduct({
+    const form = document.forms.productAdd;
+    const price = form.price.value.replace('$', '');
+    const product = {
       name: form.productName.value,
       price: price > 0 ? price : 0,
       category: form.category.value,
       image: form.imageURL.value
-    });
-    form.productName.value = "";
-    form.price.value = "$";
+    };
+    const {
+      createProduct
+    } = this.props;
+    createProduct(product);
+    form.productName.value = '';
+    form.price.value = '$';
     form.category.selectedIndex = 0;
-    form.imageURL.value = "";
+    form.imageURL.value = '';
   }
 
   render() {
@@ -51,7 +58,10 @@ class ProductAdd extends React.Component {
       className: "flex-container",
       name: "productAdd",
       onSubmit: this.handleSubmit
-    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", null, "Category"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("select", {
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+      htmlFor: "category"
+    }, "Category", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("select", {
+      id: "category",
       name: "category"
     }, /*#__PURE__*/React.createElement("option", {
       value: "Shirts"
@@ -63,19 +73,27 @@ class ProductAdd extends React.Component {
       value: "Sweaters"
     }, "Sweaters"), /*#__PURE__*/React.createElement("option", {
       value: "Accessories"
-    }, "Accessories"))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", null, "Price Per Unit "), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
+    }, "Accessories")))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+      htmlFor: "price"
+    }, "Price Per Unit", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
       type: "text",
+      id: "price",
       name: "price",
       defaultValue: "$"
-    })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", null, " Product Name"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
+    }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+      htmlFor: "productName"
+    }, "Product Name", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
       type: "text",
-      name: "productName",
-      placeholder: "Product Name"
-    })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", null, "Image URL"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
+      id: "productName",
+      name: "productName"
+    }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+      htmlFor: "imageURL"
+    }, "Image URL", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
       type: "text",
+      id: "imageURL",
       name: "imageURL",
       placeholder: "URL"
-    })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+    }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
       type: "submit"
     }, "Add Product"))));
   }
@@ -101,7 +119,7 @@ class ProductList extends React.Component {
         id category name price image
       }
     }`;
-    const response = await fetch('http://localhost:3000/graphql', {
+    const response = await fetch(window.ENV.UI_API_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -122,7 +140,7 @@ class ProductList extends React.Component {
         id
       }
     }`;
-    const response = await fetch('http://localhost:3000/graphql', {
+    const response = await fetch(window.ENV.UI_API_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -134,12 +152,18 @@ class ProductList extends React.Component {
         }
       })
     });
-    this.loadData();
+
+    if (response) {
+      this.loadData();
+    }
   }
 
   render() {
+    const {
+      products
+    } = this.state;
     return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "My Company Inventory"), /*#__PURE__*/React.createElement("h2", null, "Showing all available products"), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(ProductTable, {
-      products: this.state.products
+      products: products
     }), /*#__PURE__*/React.createElement("h2", null, "Add a new product to inventory"), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(ProductAdd, {
       createProduct: this.createProduct
     }));
@@ -147,4 +171,4 @@ class ProductList extends React.Component {
 
 }
 
-ReactDOM.render( /*#__PURE__*/React.createElement(ProductList, null), contentNode);
+ReactDOM.render( /*#__PURE__*/React.createElement(ProductList, null), document.getElementById('inventory'));

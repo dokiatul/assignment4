@@ -1,3 +1,8 @@
+/* eslint "react/react-in-jsx-scope": "off" */
+/* globals React ReactDOM */
+/* eslint "react/jsx-no-undef": "off" */
+/* eslint "no-alert": "off" */
+
 function ProductRow({ product }) {
   return (
     <tr>
